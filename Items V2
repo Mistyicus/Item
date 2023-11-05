@@ -1,0 +1,22 @@
+local discordia = require('discordia')
+local client = discordia.Client()
+
+-- Define a table to store the number of items for each user
+local itemCount = {}
+
+client:on('messageCreate', function(message)
+    if message.content == '!useItem' then
+        local userId = message.author.id
+        if itemCount[userId] and itemCount[userId] > 0 then
+            itemCount[userId] = itemCount[userId] - 1
+            message.author:send("You have " .. itemCount[userId] .. " items left.")
+            if itemCount[userId] == 0 then
+                itemCount[userId] = nil
+            end
+        else
+            message.author:send("You have no more items left.")
+        end
+    end
+end)
+
+client:run('Bot YOUR_BOT_TOKEN')
